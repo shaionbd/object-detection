@@ -1,11 +1,38 @@
 import os
+import time
 import cv2
 import face_recognition
 import numpy as np
 from PIL import Image, ImageOps
 from tqdm import tqdm
+import base64
 
 from utils.preprocessing.preload_data import PreloadData
+
+
+class ImageConverter:
+    def __init__(self, image_name=None, output_dir=None, img_format='png'):
+        self.image_name = image_name if image_name else str(int(time.time()))
+        self.output_dir = output_dir if output_dir else '.'
+        self.img_format = img_format
+        self.img_extensions = [".jpeg", ".jpg", ".png", ".gif", ".tiff", ".psd", ".pdf", ".eps", ".ai", ".indd", ".raw"]
+
+    def from_base64(self, image_data):
+        try:
+            image_data_list = image_data.strip().split(',')
+            image_data = image_data_list[-1]
+            imgdata = base64.b64decode(image_data)
+            if any(extension in self.image_name for extension in self.img_extensions):
+                print("Image extension found")
+            else:
+                self.image_name += '.'+self.img_format
+            img_path = os.path.join(self.output_dir, self.image_name)
+            with open(img_path, 'wb') as f:
+                f.write(imgdata)
+            return img_path
+        except Exception as e:
+            print(e)
+            return False
 
 
 class ImagePreprocessing(PreloadData):
@@ -131,3 +158,5 @@ class ImagePreprocessing(PreloadData):
         img_array = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
         new_array = cv2.resize(img_array, (self.IMG_SIZE, self.IMG_SIZE))
         return new_array.reshape(-1, self.IMG_SIZE, self.IMG_SIZE, 1)
+
+
