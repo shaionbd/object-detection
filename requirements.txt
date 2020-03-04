@@ -48,7 +48,7 @@ more-itertools==8.0.2
 oauthlib==1.0.3
 onboard==1.2.0
 padme==1.1.1
-paramiko==1.16.0
+paramiko==2.0.9
 passlib==1.6.5
 pexpect==4.0.1
 Pillow==3.1.2
