@@ -1,0 +1,6 @@
+venv/
+.idea/
+
+data/*.pickle
+images/unknown-images/
+images/known_images/
