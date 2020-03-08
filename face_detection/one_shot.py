@@ -15,18 +15,22 @@ class FaceRecognition:
         self.KNOWN_DATA_DIR = known_data_directory
         self.IMG_SIZE = img_size
         self.stream = stream
+        self.compress_file_path = self.KNOWN_DATA_DIR + '/compress_files'
 
     def face_encoding_list(self, known_data_dir):
         known_face_encoding_list = []
         known_face_names = []
 
         for img in os.listdir(known_data_dir):
-            known_image = face_recognition.load_image_file(os.path.join(known_data_dir, img))
-            name_list = str(img).split('.')
-            name = ''.join(name_list[:len(name_list)-1])
-            known_face_names.append(name)
-            known_face_encoding = face_recognition.face_encodings(known_image)[0]
-            known_face_encoding_list.append(known_face_encoding)
+            try:
+                known_image = face_recognition.load_image_file(os.path.join(known_data_dir, img))
+                name_list = str(img).split('.')
+                name = ''.join(name_list[:len(name_list)-1])
+                known_face_names.append(name)
+                known_face_encoding = face_recognition.face_encodings(known_image)[0]
+                known_face_encoding_list.append(known_face_encoding)
+            except Exception as e:
+                pass
 
         return known_face_encoding_list, known_face_names
 
@@ -37,13 +41,17 @@ class FaceRecognition:
         except Exception as e:
             return False
 
+    def save(self):
+        data, names = self.face_encoding_list(self.KNOWN_DATA_DIR)
+        self.save_data(data, names)
+
     def save_data(self, data, names=None):
         # save in pickle file
-        pickle_out = open("./data/knowns.pickle", "wb")
+        pickle_out = open(self.compress_file_path+"/knowns.pickle", "wb")
         pickle.dump(data, pickle_out)
         pickle_out.close()
         if names:
-            pickle_out = open("./data/known_names.pickle", "wb")
+            pickle_out = open(self.compress_file_path+"/known_names.pickle", "wb")
             pickle.dump(names, pickle_out)
             pickle_out.close()
 
@@ -53,8 +61,8 @@ class FaceRecognition:
                 data, names = self.face_encoding_list(self.KNOWN_DATA_DIR)
                 self.save_data(data, names)
                 return data, names
-            pickle_knowns_in = open("../data/knowns.pickle", "rb")
-            pickle_known_names_in = open("../data/known_names.pickle", "rb")
+            pickle_knowns_in = open(self.compress_file_path+"/knowns.pickle", "rb")
+            pickle_known_names_in = open(self.compress_file_path+"/known_names.pickle", "rb")
             return pickle.load(pickle_knowns_in), pickle.load(pickle_known_names_in)
         except Exception as e:
             data, names = self.face_encoding_list(self.KNOWN_DATA_DIR)

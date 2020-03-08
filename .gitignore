@@ -2,7 +2,7 @@ venv/
 .idea/
 
 data/*.pickle
-images/unknown-images/
-images/known_images/
+**/.jpg
+**/.png
 __pycache__/
 **/__pycache__/

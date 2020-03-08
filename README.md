@@ -16,8 +16,15 @@ img_path = image_convert.from_base64(image_data=img_data) # base64 image data ge
 * Crop face from this image 
 ```python
 from utils.preprocessing.image import ImagePreprocessing
+from face_detection.one_shot import FaceRecognition
 ip = ImagePreprocessing(source='/home/shakil/Tensorlow/object_detection/images/known_images')
 ip.face_crop(image=img_path)
+fr = FaceRecognition(known_data_directory='/home/shakil/Tensorlow/object_detection/images/known_images')
+fr.save()
+
+# save into pickle file
+
+
 ```
 
 * One shot face recognition
