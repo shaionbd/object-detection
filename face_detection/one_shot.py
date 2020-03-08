@@ -178,7 +178,7 @@ class FaceRecognition:
 if __name__ == '__main__':
     try:
         start_time = time.time()
-        fr = FaceRecognition()
+        fr = FaceRecognition(known_data_directory='../images/known_images')
         # l, n = fr.open_encoding_data()
         # print(n)
         # fr.face_crop(image='images/unknown-images/mukai_1.jpg', output_dir="images/known_images")
